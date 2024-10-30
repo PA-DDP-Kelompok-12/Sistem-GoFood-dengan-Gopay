@@ -1,0 +1,352 @@
+import random
+import time
+import csv
+from prettytable import PrettyTable
+import pwinput 
+
+data_file = "data_pa.csv"
+
+
+user_admin = "admin"
+pw_admin = "admin123"
+
+menu = {
+    "Nasi Goreng"   : 30000,
+    "Ayam Geprek"   : 25000,
+    "Bakso"         : 15000,
+    "Sate Ayam"     : 25000,
+    "Soto Ayam"     : 25000,
+    "Coto Makassar" : 30000,
+    "Es Teh"        : 5000,
+    "Es Jeruk"      : 6000,
+    "Air Es"        : 3000
+}
+
+def memuatdata():
+    """Memuat data pengguna dari CSV."""
+    user = {}
+    try:
+        with open(data_file, mode='r', newline='') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                if len(row) == 4:
+                    username, password, pengguna, saldo_gopay = row
+                    user[username] = {"password": password, "role": pengguna, "gopay_balance": int(saldo_gopay)}
+    except FileNotFoundError:
+        pass
+    return user
+
+def menyimpandata(users):
+    """Menyimpan data pengguna ke CSV."""
+    with open(data_file, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        for username, password, role, saldo in users.items():
+            writer.writerow([username, password["password"], role["user"], saldo["saldo_gopay"]])
+
+def register(users):
+    """Mendaftarkan pengguna baru."""
+    print("\n=== Register ===")
+    username = input("Username: ")
+    if username in users:
+        print("Username sudah digunakan. Coba username lain.")
+        return None
+    password = pwinput.pwinput("Password: ")
+    role = "user"  # Semua yang register otomatis menjadi user
+    users[username] = {"password": password, "role": role, "saldo_gopay": 0}
+    menyimpandata(users)
+    print("Registrasi berhasil!")
+    return username
+
+def login(users):
+    table = PrettyTable()
+    table.field_names = ["Login"]
+    table.add_row = []
+    print("\n=== Login ===")
+    username = input("Username: ")
+    password = pwinput.pwinput("Password: ")
+    if username == user_admin and password == pw_admin:
+        print("Login berhasil sebagai Admin!")
+        return username, "admin"
+    elif username in users and users[username]["password"] == password:
+        print("Login berhasil!")
+        return username, users[username]["role"]
+    else:
+        print("Username atau password salah.")
+        return None, None
+
+def tampilkan_menu():
+    """Menampilkan menu GoFood dalam format tabel."""
+    table = PrettyTable(["No", "Item", "Harga"])
+    for idx, (item, price) in enumerate(menu.items(), start=1):
+        table.add_row([idx, item, f"Rp{price}"])
+    print("\nDaftar Menu GoFood:")
+    print(table)
+
+def tampilkan_data_pengguna(users):
+    """Menampilkan data pengguna dalam format tabel."""
+    table = PrettyTable(["Username", "Role", "Saldo GoPay"])
+    for username, info in users.items():
+        table.add_row([username, info["role"], f"Rp{info['gopay_balance']}"])
+    print("\nData Pengguna:")
+    print(table)
+
+def pilih_menu():
+    """Memilih menu GoFood."""
+    while True:
+        try:
+            pilihan = int(input("\nPilih nomor menu yang ingin dipesan (0 untuk batal): "))
+            if pilihan == 0:
+                print("Pesanan dibatalkan.")
+                return None
+            elif 1 <= pilihan <= len(menu):
+                item = list(menu.keys())[pilihan - 1]
+                return item
+            else:
+                print("Nomor menu tidak valid, coba lagi.")
+        except ValueError:
+            print("Input harus berupa angka. Silakan coba lagi.")
+
+def proses_pembayaran(users, username, harga):
+    """Memproses pembayaran dengan GoPay."""
+    if users[username]["gopay_balance"] >= harga:
+        users[username]["gopay_balance"] -= harga
+        menyimpandata(users)
+        print(f"Pembayaran berhasil. Sisa saldo GoPay Anda: Rp{users[username]['gopay_balance']}")
+        return True
+    else:
+        print(f"Saldo GoPay tidak mencukupi! Sisa saldo Anda: Rp{users[username]['gopay_balance']}")
+        return False
+
+def cek_saldo(users, username):
+    """Menampilkan saldo GoPay pengguna dalam format tabel."""
+    table = PrettyTable(["Username", "Saldo GoPay"])
+    saldo = users[username]["gopay_balance"]
+    table.add_row([username, f"Rp{saldo}"])
+    print("\nCek Saldo:")
+    print(table)
+
+def tambah_saldo(users, username):
+    """Menambahkan saldo GoPay."""
+    try:
+        jumlah = int(input("Masukkan jumlah saldo yang ingin ditambahkan: Rp"))
+        users[username]["gopay_balance"] += jumlah
+        menyimpandata(users)
+        print(f"Saldo GoPay Anda berhasil ditambahkan. Saldo sekarang: Rp{users[username]['gopay_balance']}")
+    except ValueError:
+        print("Input tidak valid! Saldo gagal ditambahkan.")
+
+def admin_menu(users):
+    """Menu admin untuk CRUD data menu dan saldo pengguna."""
+    while True:
+        print("\n=== Admin Menu ===")
+        print("1. Tampilkan Menu")
+        print("2. Tambah Item Menu")
+        print("3. Hapus Item Menu")
+        print("4. Tampilkan Data Pengguna")
+        print("5. Ubah Saldo Pengguna")
+        print("6. Keluar")
+        pilihan = input("Pilih menu: ")
+
+        if pilihan == "1":
+            tampilkan_menu()
+        elif pilihan == "2":
+            item = input("Masukkan nama item baru: ")
+            try:
+                harga = int(input("Masukkan harga item baru: Rp"))
+                menu[item] = harga
+                print(f"{item} berhasil ditambahkan ke menu.")
+            except ValueError:
+                print("Harga harus berupa angka!")
+        elif pilihan == "3":
+            item = input("Masukkan nama item yang ingin dihapus: ")
+            if item in menu:
+                del menu[item]
+                print(f"{item} berhasil dihapus dari menu.")
+            else:
+                print("Item tidak ditemukan dalam menu.")
+        elif pilihan == "4":
+            tampilkan_data_pengguna(users)
+        elif pilihan == "5":
+            user_to_update = input("Masukkan username pengguna: ")
+            if user_to_update in users:
+                try:
+                    saldo_baru = int(input("Masukkan saldo baru: Rp"))
+                    users[user_to_update]["gopay_balance"] = saldo_baru
+                    menyimpandata(users)
+                    print("Saldo berhasil diperbarui.")
+                except ValueError:
+                    print("Saldo harus berupa angka!")
+            else:
+                print("Pengguna tidak ditemukan.")
+        elif pilihan == "6":
+            break
+        else:
+            print("Pilihan tidak valid. Silakan coba lagi.")
+
+def user_menu(users, username):
+    """Menu untuk pengguna dengan akses pemesanan biasa."""
+    pesanan = []
+    total_harga = 0
+
+    while True:
+        print("\n=== Menu Pengguna ===")
+        print("1. Tampilkan Menu GoFood")
+        print("2. Cek Saldo GoPay")
+        print("3. Isi Saldo GoPay")
+        print("4. Pesan Makanan")
+        print("5. Lihat Semua Pesanan")
+        print("6. Sortir Menu")
+        print("7. Mencari Menu")
+        print("8. Keluar")
+
+        pilihan = input("Pilih menu: ")
+
+        if pilihan == "1":
+            tampilkan_menu()
+        elif pilihan == "2":
+            cek_saldo(users, username)
+        elif pilihan == "3":
+            tambah_saldo(users, username)
+        elif pilihan == "4":
+            tampilkan_menu()
+            item_pilihan = pilih_menu()
+            if item_pilihan is None:
+                continue
+
+            try:
+                jumlah = int(input("Masukkan jumlah yang diinginkan: "))
+                if jumlah <= 0:
+                    print("Jumlah harus lebih dari 0.")
+                    continue
+            except ValueError:
+                print("Input tidak valid, silakan masukkan angka.")
+                continue
+
+            harga = menu[item_pilihan]
+            total_item_harga = harga * jumlah
+            total_harga += total_item_harga
+
+            print(f"\nAnda memilih {jumlah} {item_pilihan} dengan total harga Rp{total_item_harga}.")
+
+            while True:
+                lanjut = input("Apakah Anda ingin menambahkan pesanan lain? (y/n): ").lower()
+                if lanjut == 'y':
+                    tampilkan_menu()
+                    item_pilihan = pilih_menu()
+                    if item_pilihan is None:
+                        continue
+
+                    try:
+                        jumlah = int(input("Masukkan jumlah yang diinginkan: "))
+                        if jumlah <= 0:
+                            print("Jumlah harus lebih dari 0.")
+                            continue
+                    except ValueError:
+                        print("Input tidak valid, silakan masukkan angka.")
+                        continue
+
+                    harga = menu[item_pilihan]
+                    total_item_harga = harga * jumlah
+                    total_harga += total_item_harga
+                    print(f"\nAnda memilih {jumlah} {item_pilihan} dengan total harga Rp{total_item_harga}.")
+                elif lanjut == 'n':
+                    break
+                else:
+                    print("Input tidak valid, silakan coba lagi.")
+
+            print(f"\nTotal harga pesanan Anda: Rp{total_harga}.")
+            print("Memproses pembayaran...")
+
+            if proses_pembayaran(users, username, total_harga):
+                pesanan.append({"item": item_pilihan, "jumlah": jumlah, "total": total_harga})
+                print("Mencari driver...")
+
+                waktu_driver = random.randint(10, 30)
+                print(f"Menunggu driver... (Estimasi waktu: {waktu_driver} detik)")
+                time.sleep(waktu_driver)
+
+                print("Driver ditemukan! Pesanan Anda akan segera diantar.")
+            else:
+                print("\nApakah Anda ingin menambah saldo? (y/n)")
+                if input().lower() == 'y':
+                    tambah_saldo(users, username)
+                else:
+                    print("Pembayaran gagal. Silakan coba lagi nanti.")
+
+        elif pilihan == "5":
+            print("\n=== Daftar Pesanan Anda ===")
+            if not pesanan:
+                print("Belum ada pesanan.")
+            else:
+                for order in pesanan:
+                    print(f"Item: {order['item']}, Jumlah: {order['jumlah']}, Total: Rp{order['total']}")
+        elif pilihan == "6":
+            print("\n=== Daftar Pesanan Anda ===")
+            print("1. Sortir dari yang termurah")
+            print("2. Sortir dari yang termahal")
+
+            pilsor = input("Masukan Pilihan Anda: ")
+
+            if pilsor == '1':
+                sortirtermurah()
+            elif pilsor == '2':
+                sortirtermahal()
+
+        elif pilihan == "7":
+            print("Sabar Bang")
+        elif pilihan == "8":
+            print("Terima kasih telah menggunakan GoFood dengan GoPay!")
+            break
+        else:
+            print("Pilihan tidak valid. Silakan coba lagi.")
+
+def main():
+    users = memuatdata()
+    print("Selamat datang di GoFood dengan GoPay!\n")
+    while True:
+        print("\n=== Menu Utama ===")
+        print("1. Login")
+        print("2. Register")
+        print("3. Keluar")
+        pilihan = input("Pilih menu: ")
+
+        if pilihan == "1":
+            username, role = login(users)
+            if username:
+                if role == "admin":
+                    admin_menu(users)
+                elif role == "user":
+                    user_menu(users, username)
+        elif pilihan == "2":
+            register(users)
+        elif pilihan == "3":
+            print("Terima kasih telah menggunakan aplikasi ini!")
+            break
+        else:
+            print("Pilihan tidak valid. Silakan coba lagi.")
+
+def sortirtermurah():
+    makanan_sorted = sorted(menu.items(), key=lambda x: x[1])
+
+    table = PrettyTable()
+    table.field_names = ["No", "Nama Makanan", "Harga"]
+
+    for idx, (nama, harga) in enumerate(makanan_sorted, start=1):
+        table.add_row([idx, nama, f"Rp{harga}"])
+
+    print("Makanan diurutkan dari harga termurah:")
+    print(table)
+
+def sortirtermahal():
+    makanan_sorted = sorted(menu.items(), key=lambda x: x[1], reverse=True)
+
+    table = PrettyTable()
+    table.field_names = ["No", "Nama Makanan", "Harga"]
+
+    for idx, (nama, harga) in enumerate(makanan_sorted, start=1):
+        table.add_row([idx, nama, f"Rp{harga}"])
+
+    print("Makanan diurutkan dari harga termahal:")
+    print(table)
+
+main()
