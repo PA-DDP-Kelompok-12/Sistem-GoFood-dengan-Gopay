@@ -12,6 +12,19 @@ pw_admin = "admin123"
 
 nama_driver = ["Agus", "Budiono", "Siregar", "Dewi", "Eko", "Fajar", "Gina", "Hana"]
 
+menu = {
+    "Nasi Goreng"   : 30000,
+    "Ayam Geprek"   : 25000,
+    "Bakso"         : 15000,
+    "Mie Ayam"      : 20000,
+    "Sate Ayam"     : 25000,
+    "Soto Ayam"     : 25000,
+    "Coto Makassar" : 30000,
+    "Es Teh"        : 5000,
+    "Es Jeruk"      : 6000,
+    "Air Es"        : 3000
+}
+
 def memuatdata():
     user = {}
     try:
