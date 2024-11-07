@@ -219,11 +219,12 @@ def estimasi_waktu():
     return random.randint(5, 10)
 
 def buat_invoice(username, pesanan, saldo_akhir):
-    print("\n=== Invoice Pembayaran ===")
-    table = PrettyTable(["Item", "Jumlah", "Harga Total"])
+    print("\n=========== Invoice Pembayaran ==============")
+    print("{:<20} {:<10} {:<15}".format("Item", "Jumlah", "Harga Total"))
+    print("-" * 45)
     for order in pesanan:
-        table.add_row([order["item"], order["jumlah"], f"Rp{order['total']}"])
-    print(table)
+        print("{:<20} {:<10} Rp{:<15}".format(order["item"], order["jumlah"], order["total"]))
+    print("-" * 45)
     print(f"Saldo GoPay Tersisa: Rp{saldo_akhir}")
     print("Terima kasih telah menggunakan GoFood!")
 
