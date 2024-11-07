@@ -5,24 +5,12 @@ from prettytable import PrettyTable
 import pwinput 
 
 data_file = "data_pa.csv"
+menu_file = "menu.csv"
 
 user_admin = "admin"
 pw_admin = "admin123"
 
 nama_driver = ["Agus", "Budiono", "Siregar", "Dewi", "Eko", "Fajar", "Gina", "Hana"]
-
-menu = {
-    "Nasi Goreng"   : 30000,
-    "Ayam Geprek"   : 25000,
-    "Bakso"         : 15000,
-    "Mie Ayam"      : 20000,
-    "Sate Ayam"     : 25000,
-    "Soto Ayam"     : 25000,
-    "Coto Makassar" : 30000,
-    "Es Teh"        : 5000,
-    "Es Jeruk"      : 6000,
-    "Air Es"        : 3000
-}
 
 def memuatdata():
     user = {}
@@ -40,7 +28,7 @@ def memuatdata():
 def menyimpandata(users):
     with open(data_file, mode='w', newline='') as file:
         writer = csv.writer(file)
-        for username, info in users.items():  # Corrected from users() to users.items()
+        for username, info in users.items(): 
             writer.writerow([username, info["password"], info["role"], info["saldo_gopay"]])
 
 def register(users):
@@ -70,21 +58,20 @@ def login(users):
         print("Username atau password salah.")
         return None, None
 
-def tampilkan_menu():
+def tampilkan_menu(menu):
     table = PrettyTable(["No", "Item", "Harga"])
-    for idx, (item, price) in enumerate(menu.items(), start=1):
-        table.add_row([idx, item, f"Rp{price}"])
-    print("\nDaftar Menu GoFood:")
-    print(table)
+    with open(menu_file, mode='r', newline='') as file:
+        reader = csv.reader(file)
+        print(table)
 
-def tampilkan_data_pengguna(users):
-    table = PrettyTable(["Username", "Role", "Saldo GoPay"])
-    for username, info in users.items():  
-        table.add_row([username, info["role"], f"Rp{info['saldo_gopay']}"])
-    print("\nData Pengguna:")
-    print(table)
+def ubah_menu():
+    with open(menu_file, mode="w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["No", "Item", "Harga"])
+        print("Menu sudah direset. Silakan menambahkan menu baru.")
+    
 
-def pilih_menu():
+def pilih_menu(menu):
     print("\nSilakan pilih menu dengan nomor yang sesuai:")
     tampilkan_menu()
     pilihan = int(input("\nMasukkan nomor menu yang ingin Anda pesan (0 untuk batal): "))
@@ -123,7 +110,6 @@ def tambah_saldo(users, username):
     except ValueError:
         print("Input tidak valid! Saldo gagal ditambahkan.")
 
-
 def admin_menu(users):
     while True:
         table = PrettyTable()
@@ -132,7 +118,7 @@ def admin_menu(users):
         table.add_row(["1. Tampilkan Menu"])
         table.add_row(["2. Tambah Item Menu"])
         table.add_row(["3. Hapus Item Menu"])
-        table.add_row(["4. Tampilkan Data"])
+        table.add_row(["4. Mengubah Menu"])
         table.add_row(["5. Mengubah Data"])
         table.add_row(["6. Keluar"])
         print(table)
@@ -304,6 +290,31 @@ def main():
 
         else:
             print("Pilihan tidak valid. Silakan coba lagi.")
+
+def sortirtermurah():
+    makanan_sorted = sorted(menu.items(), key=lambda x: x[1])
+
+    table = PrettyTable()
+    table.field_names = ["No", "Nama Makanan", "Harga"]
+
+    for idx, (nama, harga) in enumerate(makanan_sorted, start=1):
+        table.add_row([idx, nama, f"Rp{harga}"])
+
+    print("Makanan diurutkan dari harga termurah:")
+    print(table)
+
+def sortirtermahal():
+    makanan_sorted = sorted(menu.items(), key=lambda x: x[1], reverse=True)
+
+    table = PrettyTable()
+    table.field_names = ["No", "Nama Makanan", "Harga"]
+
+    for idx, (nama, harga) in enumerate(makanan_sorted, start=1):
+        table.add_row([idx, nama, f"Rp{harga}"])
+
+    print("Makanan diurutkan dari harga termahal:")
+    print(table)
+
 
 if __name__ == "__main__":
     main()
