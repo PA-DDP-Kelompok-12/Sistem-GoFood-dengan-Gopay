@@ -8,7 +8,6 @@ from datetime import datetime
 
 data_file = "data_pa.csv"
 menu_file = "menu.csv"
-invoice_file = "invoice.csv"
 
 user_admin = "admin"
 pw_admin = "admin123"
@@ -147,11 +146,11 @@ def login(users):
         print("\n================")
         print("|    LOGIN     |")
         print("================")
-        username = input("Nama: ").strip()  # Menghapus spasi di awal dan akhir input
-        if not validasi_username(username):  # Memvalidasi username
+        username = input("Nama: ").strip()  
+        if not validasi_username(username):  
             continue
         password = pwinput.pwinput("Password: ")
-        if not validasi_input(password):  # Memastikan password tidak kosong
+        if not validasi_input(password):  
             continue
         
         if username == user_admin and password == pw_admin:
@@ -500,7 +499,7 @@ def proses_pembayaran(users, username, total_harga):
             
             if pilihan == "1":
                 print("Anda memilih metode pembayaran COD.")
-                print(f"Total yang harus dibayar: Rp{total_harga}")
+                print(f"\nTotal yang harus dibayar: Rp{total_harga}")
                 print("Silahkan bayar saat barang diantar.")
                 return "COD"  
 
@@ -593,7 +592,7 @@ def proses_pesanan(users, username):
                             time.sleep(2)
                             print("Pesanan telah sampai!")
                             buat_invoice(username, users, total_harga, metode_pembayaran)  
-                            return pesanan
+                            return pilihan
                 except ValueError:
                     print("Jumlah pesanan harus berupa angka!")
         elif pilihan == "4":
@@ -618,14 +617,13 @@ def buat_invoice(username, users, total_harga, metode_pembayaran):
             print(f"Tanggal        : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             print(f"Metode Pembayaran: {metode_pembayaran}")
             print("-------------------------------")
-            print(f"Total Harga    : Rp{total_harga}")
-            print("\nPesanan:")
+            print("Pesanan:")
             for item in pesanan:
                 print(f"{item['item']} (Jumlah: {item['jumlah']}) - Rp{item['total']}")
-            
+            print(f"\nTotal Harga    : Rp{total_harga}")
+
             if metode_pembayaran == "GoPay":
                 print(f"Sisa Saldo GoPay : Rp{saldo_gopay}")
-
             print("===============================")
             time.sleep(1)
             break
