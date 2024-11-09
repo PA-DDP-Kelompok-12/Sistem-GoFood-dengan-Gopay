@@ -104,6 +104,6 @@ jika pembeli memilih pilihan 3, maka pembeli bisa mengecek saldo gopay.
 
 jika pembeli memilih pilihan 4, maka pembeli bisa mengisi atau top up saldo gopay dengan memilih pilihan yang tertera.
 
-![Screenshot 2024-11-09 195000](https://github.com/user-attachments/assets/21e66ea9-b802-4929-80d4-cd1d3788d5aa)
+![Screenshot 2024-11-09 204043](https://github.com/user-attachments/assets/77383a76-2fff-40dc-b01e-cb1dae035521)
 
 jika pembeli memilih pilihan 5, maka akan kembali ke menu awal.
