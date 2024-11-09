@@ -480,12 +480,14 @@ def tampilkan_pilihan():
         print("Pilihan tidak valid! Silakan pilih nomor yang benar.")
         return None
 
-def lakukan_topup(amount):
+def lakukan_topup(users, username, amount):
     print(f"Top-up Rp {amount} sedang diproses...")
     time.sleep(1)
+    users[username]["saldo_gopay"] += amount  
+    menyimpandata(users)  
     print("Top-up berhasil!")
 
-def topup():
+def topup(users, username):
     while True:
         amount = tampilkan_pilihan()
         
@@ -495,8 +497,7 @@ def topup():
         elif amount:
             konfirmasi = input(f"Apakah Anda yakin ingin top-up sebesar Rp {amount}? (y/n): ")
             if konfirmasi.lower() == "y":
-                lakukan_topup(amount)
-            else:
+                lakukan_topup(users, username, amount)  
                 print("Top-up dibatalkan.")
         else:
             print("Top-up gagal karena pilihan tidak valid.")
@@ -562,7 +563,7 @@ def proses_pembayaran(users, username, total_harga):
                     print("Saldo GoPay Anda tidak cukup!")
                     tambah_saldo = input("Apakah Anda ingin menambahkan saldo GoPay? (y/n): ").lower()
                     if tambah_saldo == 'y':
-                        ubah_saldo(users)
+                        topup(users, username)
                     else:
                         print("Silahkan pilih metode pembayaran lain atau tambahkan saldo.")
                         continue 
@@ -724,7 +725,7 @@ def main():
                             cek_saldo(username, users)
                             kesempatan_keluar = 0
                         elif user_choice == "4":
-                            topup()
+                            topup(users, username)
                             kesempatan_keluar = 0
                         elif user_choice == "5":
                             break
