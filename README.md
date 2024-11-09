@@ -23,6 +23,7 @@ di menu registrasi ini program akan meminta kita untuk memasukkan username dan p
 di menu login ini program akan meminta kita untuk memasukkan username dan password yang sudah ada didalam data pembeli dan untuk admin.
 
 #### Setelah login berhasil, maka program akan memunculkan menu yang sesuai dengan proses login yang telah di lakukan
+##### MENU ADMIN
 
 ![image](https://github.com/user-attachments/assets/8b80907a-7edc-44ee-a102-490ce7dc7ee6)
 
@@ -54,3 +55,55 @@ jika admin memilih pilihan 4, maka admin diminta untuk memasukan nama menu yang 
 
 jika admin memilih pilihan 5, admin bisa mengelola user dan akan muncul 4 pilihan lagi, yaitu tampilkan data user, ubah username, ubah saldo, dan kembali.
 
+##### MENU PEMBELI
+
+![Screenshot 2024-11-09 192137](https://github.com/user-attachments/assets/adfd9567-4379-40f7-b99d-136fb8a009c0)
+
+pada menu pembeli terdapat 5 pilihan yang bisa di pilih oleh pembeli dan pembeli akan diminta untuk memasukan satu pilihan.
+
+![Screenshot 2024-11-09 192608](https://github.com/user-attachments/assets/87df3b86-7af3-498c-958b-aab2033b5247)
+
+jika pembeli memilih pilihan 1, maka program akan menampilkan menu dan harga yang tertera ditabel.
+
+![Screenshot 2024-11-09 193046](https://github.com/user-attachments/assets/2242a1fd-6ea0-431a-a817-1b0b3c90a593)
+
+jika pembeli memilih pilihan 2, maka program akan menampilkan tabel menu pesan yang terdiri dari 4 pilihan, yaitu sortir dari yang termurah, sortir dari yang termahal, pesan, dan kembali.
+
+![Screenshot 2024-11-09 193255](https://github.com/user-attachments/assets/dc52d0d0-bff4-49d9-8789-e4c033a0a06f)
+
+jika pembeli memilih pilihan 1 di tabel menu pesan, maka program akan menampilkan menu dari yang termurah.
+
+![Screenshot 2024-11-09 193332](https://github.com/user-attachments/assets/c293e613-2c64-4aa5-80ee-f415bdd1ce1c)
+
+jika pembeli memilih pilihan 2 di tabel menu pesan, maka program akan menampilkan menu dari yang termahal.
+
+lalu yang selanjutnya, jika pembeli memilih pilihan 3 di tabel menu pesan, maka pembeli diminta untuk memasukan nomor makananan yang akan di pesan dan memasukan jumlah pesanan.
+
+jika metode pembayarannya COD (Cash On Delivery)
+
+![Screenshot 2024-11-09 193558](https://github.com/user-attachments/assets/2140664b-53f1-42ee-ae88-a608d900632f)
+
+struk pembelian :
+
+![Screenshot 2024-11-09 193946](https://github.com/user-attachments/assets/31de6c5e-be3a-46ab-b8b0-bc607bf43578)
+
+
+jika metode pembayarannya menggunakan E-money/Go-pay
+
+![Screenshot 2024-11-09 194300](https://github.com/user-attachments/assets/4eb764cc-1ea0-49fb-a986-bd1e01828731)
+
+struk pembelian :
+
+![Screenshot 2024-11-09 194325](https://github.com/user-attachments/assets/8b86010e-ce0a-4bf4-a548-0c450ab0cc5a)
+
+![Screenshot 2024-11-09 194406](https://github.com/user-attachments/assets/6aa88e27-e6e6-4333-af7f-a9609ff67424)
+
+jika pembeli memilih pilihan 3, maka pembeli bisa mengecek saldo gopay.
+
+![Screenshot 2024-11-09 194919](https://github.com/user-attachments/assets/fd745714-45b9-43d5-a703-d733baf4e6e7)
+
+jika pembeli memilih pilihan 4, maka pembeli bisa mengisi atau top up saldo gopay dengan memilih pilihan yang tertera.
+
+![Screenshot 2024-11-09 195000](https://github.com/user-attachments/assets/21e66ea9-b802-4929-80d4-cd1d3788d5aa)
+
+jika pembeli memilih pilihan 5, maka akan kembali ke menu awal.
