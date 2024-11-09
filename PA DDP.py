@@ -460,6 +460,7 @@ def tampilkan_pilihan():
     table.add_row(["4. Rp 500.000"])
     table.add_row(["5. Rp 1.000.000"])
     table.add_row(["6. Kembali ke MENU USER"])
+    print(table)
 
     pilihan = input("Masukkan pilihan (1/2/3/4/5/6): ")
     
