@@ -100,10 +100,10 @@ struk pembelian :
 
 jika pembeli memilih pilihan 3, maka pembeli bisa mengecek saldo gopay.
 
-![Screenshot 2024-11-09 194919](https://github.com/user-attachments/assets/fd745714-45b9-43d5-a703-d733baf4e6e7)
+![Screenshot 2024-11-09 204043](https://github.com/user-attachments/assets/ccad7034-28aa-4db1-b149-cbba6020b4ca)
 
 jika pembeli memilih pilihan 4, maka pembeli bisa mengisi atau top up saldo gopay dengan memilih pilihan yang tertera.
 
-![Screenshot 2024-11-09 204043](https://github.com/user-attachments/assets/77383a76-2fff-40dc-b01e-cb1dae035521)
+![Screenshot 2024-11-09 204707](https://github.com/user-attachments/assets/e82ba9e2-b4ed-410c-97a2-11c0154e3e6d)
 
 jika pembeli memilih pilihan 5, maka akan kembali ke menu awal.
