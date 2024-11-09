@@ -49,6 +49,7 @@ jika admin memilih pilihan 3, maka admin diminta untuk memasukan nama menu yang 
 ![image](https://github.com/user-attachments/assets/702aca69-8e05-4fe7-8bd0-01dad0f7b97f)
 
 jika admin memilih pilihan 4, maka admin diminta untuk memasukan nama menu yang ingin diubah, lalu memasukan nama baru dan harga baru.
+
 ![image](https://github.com/user-attachments/assets/ef54ff86-9116-42de-a1c9-a794711f1907)
 
 jika admin memilih pilihan 5, admin bisa mengelola user dan akan muncul 4 pilihan lagi, yaitu tampilkan data user, ubah username, ubah saldo, dan kembali.
