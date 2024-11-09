@@ -450,23 +450,61 @@ def ubah_saldo(users):
             print(f"Terjadi kesalahan saat mengubah saldo: {e}")
             continue
 
-def topup_gopay(users, username):
+def tampilkan_pilihan():
+    table = PrettyTable()
+    table.field_names = ["TOP-UP GOPAY"]
+    table.add_row(["Pilih Nominal!"])
+    table.add_row(["1. Rp 20.000"])
+    table.add_row(["2. Rp 50.000"])
+    table.add_row(["3. Rp 100.000"])
+    table.add_row(["4. Rp 500.000"])
+    table.add_row(["5. Rp 1.000.000"])
+    table.add_row(["6. Kembali ke MENU USER"])
+
+    pilihan = input("Masukkan pilihan (1/2/3/4/5/6): ")
+    
+    if pilihan == "1":
+        return 20000
+    elif pilihan == "2":
+        return 50000
+    elif pilihan == "3":
+        return 100000
+    elif pilihan == "4":
+        return 500000
+    elif pilihan == "5":
+        return 1000000
+    elif pilihan == "6":
+        return "kembali"  
+    else:
+        print("Pilihan tidak valid! Silakan pilih nomor yang benar.")
+        return None
+
+def lakukan_topup(amount):
+    print(f"Top-up Rp {amount} sedang diproses...")
+    time.sleep(1)
+    print("Top-up berhasil!")
+
+def topup():
     while True:
-        try:
-            jumlah = int(input("Masukkan jumlah top-up GoPay: Rp"))
-            if jumlah > 0:
-                users[username]["saldo_gopay"] += jumlah
-                menyimpandata(users)
-                print(f"Top-up berhasil! Saldo baru: Rp{users[username]['saldo_gopay']}")
-                break
+        amount = tampilkan_pilihan()
+        
+        if amount == "kembali":
+            print("Kembali ke MENU USER.")
+            break  
+        elif amount:
+            konfirmasi = input(f"Apakah Anda yakin ingin top-up sebesar Rp {amount}? (y/n): ")
+            if konfirmasi.lower() == "y":
+                lakukan_topup(amount)
             else:
-                print("Jumlah top-up harus lebih dari nol!")
-        except ValueError:
-            print("Input harus berupa angka!")
-            continue
-        except Exception as e:
-            print(f"Terjadi kesalahan saat top-up GoPay: {e}")
-            continue
+                print("Top-up dibatalkan.")
+        else:
+            print("Top-up gagal karena pilihan tidak valid.")
+            continue  
+        
+        lagi = input("\nApakah Anda ingin melakukan top-up lagi? (y/n): ")
+        if lagi.lower() != "y":
+            print("Kembali ke MENU USER.")
+            break
 
 def cek_saldo(username, users):
     while True:
@@ -481,7 +519,6 @@ def cek_saldo(username, users):
         except Exception as e:
             print(f"Terjadi kesalahan: {e}")
             return False  
-
 
 def estimasi_waktu():
     return random.randint(5, 20)
@@ -505,7 +542,7 @@ def proses_pembayaran(users, username, total_harga):
 
             elif pilihan == "2":
                 print("Anda memilih metode pembayaran GoPay.")
-                saldo_gopay = users[username]["saldo_gopay"]
+                saldo_gopay = users[username]["saldo_gopay"] 
                 print(f"Saldo GoPay Anda: Rp{saldo_gopay}")
                 print(f"Total yang harus dibayar: Rp{total_harga}")
 
@@ -592,6 +629,7 @@ def proses_pesanan(users, username):
                             time.sleep(2)
                             print("Pesanan telah sampai!")
                             buat_invoice(username, users, total_harga, metode_pembayaran)  
+                            time.sleep(1)
                             return pilihan
                 except ValueError:
                     print("Jumlah pesanan harus berupa angka!")
@@ -632,58 +670,80 @@ def buat_invoice(username, users, total_harga, metode_pembayaran):
             return False
 
 
+import time
+
 def main():
-    init_files()
-    users = memuatdata()
-    while True:
-        print("\n==================")
-        print("|     GOFOOD     |")
-        print("==================")
-        print("| 1. Register    |")
-        print("| 2. Login       |")
-        print("| 3. Keluar      |")
-        print("==================")
+    kesempatan_keluar = 0 
 
-        pilihan = input("Pilih menu: ")
-        
-        if pilihan == "1":
-            register(users)
-        elif pilihan == "2":
-            username, role = login(users)
-            if role == "admin":
-                admin_menu(users)
-            elif role == "user":
-                while True:
-                    table = PrettyTable()
-                    table.field_names = ["MENU USER"]
-                    table.add_rows([
-                        ["1. Tampilkan Menu"],
-                        ["2. Pesan Makanan"],
-                        ["3. Cek Saldo GoPay"],
-                        ["4. Top Up GoPay"],
-                        ["5. Keluar"]
-                    ])
-                    print(table)
+    try:
+        init_files()
+        users = memuatdata()
 
-                    user_choice = input("Pilih menu: ")
+        while True:
+            print("\n==================")
+            print("|     GOFOOD     |")
+            print("==================")
+            print("| 1. Register    |")
+            print("| 2. Login       |")
+            print("| 3. Keluar      |")
+            print("==================")
 
-                    if user_choice == "1":
-                        tampilkan_menu()
-                    elif user_choice == "2":
-                        proses_pesanan(users, username)
-                    elif user_choice == "3":
-                        cek_saldo(username, users)
-                    elif user_choice == "4":
-                        topup_gopay(users, username)
-                    elif user_choice == "5":
-                        break
-                    else:
-                        print("Pilihan tidak valid!")
-        elif pilihan == "3":
-            print("Terima kasih, sampai jumpa lagi!")
-            break
+            pilihan = input("Pilih menu: ")
+
+            if pilihan == "1":
+                register(users)
+                kesempatan_keluar = 0  
+            elif pilihan == "2":
+                username, role = login(users)
+                kesempatan_keluar = 0
+                if role == "admin":
+                    admin_menu(users)
+                elif role == "user":
+                    while True:
+                        table = PrettyTable()
+                        table.field_names = ["MENU USER"]
+                        table.add_rows([
+                            ["1. Tampilkan Menu"],
+                            ["2. Pesan Makanan"],
+                            ["3. Cek Saldo GoPay"],
+                            ["4. Top Up GoPay"],
+                            ["5. Keluar"]
+                        ])
+                        print(table)
+
+                        user_choice = input("Pilih menu: ")
+
+                        if user_choice == "1":
+                            tampilkan_menu()
+                            kesempatan_keluar = 0
+                        elif user_choice == "2":
+                            proses_pesanan(users, username)
+                            kesempatan_keluar = 0
+                        elif user_choice == "3":
+                            cek_saldo(username, users)
+                            kesempatan_keluar = 0
+                        elif user_choice == "4":
+                            topup()
+                            kesempatan_keluar = 0
+                        elif user_choice == "5":
+                            break
+                        else:
+                            print("Pilihan tidak valid!")
+            elif pilihan == "3":
+                print("Terima kasih, sampai jumpa lagi!")
+                break
+            else:
+                print("Pilihan tidak valid!")
+
+    except KeyboardInterrupt:
+        if kesempatan_keluar >= 1:  
+            print("\nTerima kasih!")
+            exit(0)
         else:
-            print("Pilihan tidak valid!")
+            print("\nANDA MENEKAN CTRL + C, TEKAN LAGI JIKA MAU KELUAR!")
+            kesempatan_keluar += 1  
+            time.sleep(2)  
+            main()  
 
 if __name__ == "__main__":
     main()
